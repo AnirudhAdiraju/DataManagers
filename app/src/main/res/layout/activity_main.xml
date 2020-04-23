@@ -16,9 +16,10 @@
             android:id="@+id/intro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
             android:text="Cashier Search App"
-            android:textSize="32dp"
-            android:autoSizeTextType="uniform"/>
+            android:textSize="32dp" />
     </LinearLayout>
 
     <LinearLayout
