@@ -127,6 +127,9 @@ public class MainActivity extends AppCompatActivity {
                             //Data bind ListView with ArrayAdapter
                             lView.setAdapter(adapter);
                         }
+                        else{
+                            Toast.makeText(MainActivity.this, "Database Error", Toast.LENGTH_LONG).show();
+                        }
 
                     }
                 },
