@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private String resulto = "";
     private ListView lView;
     ArrayAdapter<String> adapter;
+    String[] items;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,12 +29,12 @@ public class MainActivity extends AppCompatActivity {
         talk = findViewById(R.id.talkbut);
         lView = findViewById(R.id.list);
         //resulto = "";
-        final String[] colorsArray = new String[]{
+        items = new String[]{
                 "red", "blue", "green", "black", "white",
                 "gray", "cyan", "magenta", "yellow", "lightgray",
                 "darkgray", "grey", "lightgrey", "darkgrey", "aqua",
                 "fuchsia", "lime", "maroon", "navy", "olive",
-                "purple", "silver", "teal"
+                "purple", "silver", "teal", "blred"
         };
 
         //Get widgets reference from XML layout
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Initialize an ArrayAdapter and data bind with a String Array
         adapter = new ArrayAdapter<String>
-                (this,android.R.layout.simple_list_item_1,colorsArray);
+                (this,android.R.layout.simple_list_item_1,items);
 
         //Data bind ListView with ArrayAdapter
         lView.setAdapter(adapter);
@@ -64,7 +65,18 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                (MainActivity.this).adapter.getFilter().filter(s);
+                int textlength = s.length();
+                ArrayList<String> tempArrayList = new ArrayList<String>();
+                for(String c: items){
+                    if (textlength <= c.length()) {
+                        if (c.toLowerCase().contains(s.toString().toLowerCase())) {
+                            tempArrayList.add(c);
+                        }
+                    }
+                }
+                adapter = new ArrayAdapter<String>
+                        (MainActivity.this,android.R.layout.simple_list_item_1,tempArrayList);;
+                lView.setAdapter(adapter);
             }
 
             @Override
@@ -84,7 +96,18 @@ public class MainActivity extends AppCompatActivity {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     resulto = result.get(0);
                     speechtext.setText(resulto);
-
+                    int textlength = resulto.length();
+                    ArrayList<String> tempArrayList = new ArrayList<String>();
+                    for(String c: items){
+                        if (textlength <= c.length()) {
+                            if (c.toLowerCase().contains(resulto.toLowerCase())) {
+                                tempArrayList.add(c);
+                            }
+                        }
+                    }
+                    adapter = new ArrayAdapter<String>
+                            (MainActivity.this,android.R.layout.simple_list_item_1,tempArrayList);;
+                    lView.setAdapter(adapter);
 
 
             }
