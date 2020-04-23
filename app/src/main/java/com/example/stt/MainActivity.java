@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.speech.*;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.*;
 import android.view.*;
 import android.widget.*;
 

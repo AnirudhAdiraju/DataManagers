@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">STT</string>
     <string name="button">talk</string>
+    <string name="Datamanagers">Voice Search</string>
 </resources>
