@@ -2,8 +2,8 @@ package com.example.stt;
 
 public class Item {
         String name;
-        int stock;
-        public Item(String name, int stock) {
+        String stock;
+        public Item(String name, String stock) {
             this.name = name;
             this.stock = stock;
         }
@@ -15,11 +15,11 @@ public class Item {
             this.name = name;
         }
 
-        public int getStock() {
+        public String getStock() {
             return stock;
         }
 
-        public void setStock(int stock) {
+        public void setStock(String stock) {
             this.stock = stock;
         }
 

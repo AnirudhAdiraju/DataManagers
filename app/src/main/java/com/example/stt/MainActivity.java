@@ -3,13 +3,24 @@ package com.example.stt;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.*;
 import android.os.Bundle;
 import android.speech.*;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import java.util.*;
 
@@ -30,33 +41,7 @@ public class MainActivity extends AppCompatActivity {
         talk = findViewById(R.id.talkbut);
         lView = findViewById(R.id.list);
         //resulto = "";
-        items.add(new Item("Gala Apples",5));
-        items.add(new Item("Yellow Bananas",3));
-        items.add(new Item("Oranges",5));
-        items.add(new Item("Red Delicious Apples",1));
-        items.add(new Item("Green Bananas",1));
-        items.add(new Item("Red Grapes",10));
-        items.add(new Item("Green Grapes",2));
-
-        //Get widgets reference from XML layout
-
-
-        //Initialize an ArrayAdapter and data bind with a String Array
-        adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_2, android.R.id.text1, items) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-                TextView text2 = (TextView) view.findViewById(android.R.id.text2);
-
-                text1.setText(items.get(position).getName());
-                text2.setText("Stock:"+items.get(position).getStock());
-                return view;
-            }
-        };
-
-        //Data bind ListView with ArrayAdapter
-        lView.setAdapter(adapter);
+        addItemToSheet();
         talk.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View view){
                 Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -106,6 +91,73 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+    private void addItemToSheet() {
+        final ProgressDialog loading = ProgressDialog.show(this,"Getting Items","Please wait");
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbxLHCBJ3n_UQ7Ndi89abcmXf4Erz6OoEczZKLIgEkl53xhA5ohn/exec",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        loading.dismiss();
+                        String[] itms = response.split(",");
+                        if (itms[0].equals("true")) {
+                            Toast.makeText(MainActivity.this, "Items Received From Database", Toast.LENGTH_LONG).show();
+                            for (int x=1; x<itms.length;x+=2){
+                                items.add(new Item(itms[x],itms[x+1]));
+                            }
+
+                            //Get widgets reference from XML layout
+
+
+                            //Initialize an ArrayAdapter and data bind with a String Array
+                            adapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_2, android.R.id.text1, items) {
+                                @Override
+                                public View getView(int position, View convertView, ViewGroup parent) {
+                                    View view = super.getView(position, convertView, parent);
+                                    TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+                                    TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+
+                                    text1.setText(items.get(position).getName());
+                                    text2.setText("Stock: "+items.get(position).getStock());
+                                    return view;
+                                }
+                            };
+
+                            //Data bind ListView with ArrayAdapter
+                            lView.setAdapter(adapter);
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    Log.d("ERROR",error.toString());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+
+                //here we pass params
+                params.put("action","getItems");
+
+                return params;
+            }
+        };
+
+        int socketTimeOut = 5000;// u can change this .. here it is 50 seconds
+
+        RetryPolicy retryPolicy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(retryPolicy);
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        queue.add(stringRequest);
+
+
     }
 
     @Override
