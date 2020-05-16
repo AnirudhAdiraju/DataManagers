@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                         String[] itms = response.split(",");
                         if (itms[0].equals("true")) {
                             Toast.makeText(MainActivity.this, "Items Received From Database", Toast.LENGTH_LONG).show();
-                            for (int x=1; x<itms.length;x+=2){
+                            for (int x=1; x<itms.length-1;x+=2){
                                 items.add(new Item(itms[x],itms[x+1]));
                             }
 
