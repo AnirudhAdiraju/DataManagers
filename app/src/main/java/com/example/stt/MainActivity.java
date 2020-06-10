@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                         TextView text2 = (TextView) view.findViewById(android.R.id.text2);
 
                         text1.setText(tempArrayList.get(position).getName());
-                        text2.setText("Stock: "+tempArrayList.get(position).getStock());
+                        text2.setText("ID: "+tempArrayList.get(position).getStock());
                         return view;
                     }
                 };
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                                     TextView text2 = (TextView) view.findViewById(android.R.id.text2);
 
                                     text1.setText(items.get(position).getName());
-                                    text2.setText("Stock: "+items.get(position).getStock());
+                                    text2.setText("ID: "+items.get(position).getStock());
                                     return view;
                                 }
                             };
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
                             TextView text2 = (TextView) view.findViewById(android.R.id.text2);
 
                             text1.setText(tempArrayList.get(position).getName());
-                            text2.setText("Stock:"+tempArrayList.get(position).getStock());
+                            text2.setText("ID:"+tempArrayList.get(position).getStock());
                             return view;
                         }
                     };
